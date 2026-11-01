@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ঘুরতে যাবে?</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html,body{height:100%;margin:0;background:#cfe9f5}
+body{color:#4a2b3b;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Bengali",sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#bg{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0}
+.card{position:relative;z-index:1;text-align:center;background:rgba(255,255,255,.8);border-radius:28px;padding:20px 18px;max-width:min(92vw,460px);box-shadow:0 8px 30px rgba(60,90,110,.18)}
+h1{font-size:1.45rem;margin:6px 0 18px;line-height:1.4}
+p{margin:0 0 16px;font-size:1rem}
+#top svg{width:120px;height:auto}
+.row{display:flex;gap:8px;justify-content:center;align-items:flex-end;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.col svg{width:110px;height:auto}
+button,a.go{font-size:1.05rem;padding:12px 26px;border:0;border-radius:999px;cursor:pointer;font-weight:600;text-decoration:none;display:inline-block}
+#yes,a.go{background:#e11d48;color:#fff}
+button.opt{background:#fff;color:#7a3b50;border:2px solid #f3a6bd}
+button.opt:active{background:#ffd9e4}
+#noSlot{width:150px;height:64px}
+#noWrap{position:fixed;z-index:3;width:150px;height:64px;display:flex;align-items:center}
+#noWrap.ready{transition:left .6s ease,top .6s ease}
+#noWrap.rev{flex-direction:row-reverse}
+#noWrap button{background:#fff;color:#7a3b50;flex:none}
+.rope{width:16px;height:3px;background:#b08968;border-radius:2px;flex:none}
+.puller{width:56px;height:50px;flex:none}
+.drop{animation:fall 1.3s ease-in infinite}
+.drop.d2{animation-delay:.6s}
+@keyframes fall{0%{transform:translateY(0);opacity:1}100%{transform:translateY(34px);opacity:0}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="kash" viewBox="0 0 40 120">
+      <path d="M20 120 Q10 100 6 84 M20 120 Q30 100 36 86" fill="none" stroke="#8aa56a" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20 120 Q18 90 22 50" fill="none" stroke="#9bb07a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M22 50 C6 46 2 24 12 10 C17 3 27 1 31 10 C39 24 36 46 22 50Z" fill="#fff"/>
+      <path d="M22 50 L22 8 M22 46 L10 16 M22 46 L34 16" stroke="#dfe9ee" stroke-width="1" fill="none"/>
+    </symbol>
+    <symbol id="catHead" viewBox="0 0 200 180">
+      <polygon points="30,70 38,15 80,45" fill="#f4b183" stroke="#8a5a3c" stroke-width="3" stroke-linejoin="round"/>
+      <polygon points="170,70 162,15 120,45" fill="#f4b183" stroke="#8a5a3c" stroke-width="3" stroke-linejoin="round"/>
+      <polygon points="42,58 45,32 64,46" fill="#ffb3c6"/>
+      <polygon points="158,58 155,32 136,46" fill="#ffb3c6"/>
+      <ellipse cx="100" cy="100" rx="78" ry="65" fill="#f4b183" stroke="#8a5a3c" stroke-width="3"/>
+      <ellipse cx="100" cy="118" rx="38" ry="28" fill="#fff3e6"/>
+      <ellipse cx="50" cy="116" rx="13" ry="8" fill="#ff9db8" opacity=".7"/>
+      <ellipse cx="150" cy="116" rx="13" ry="8" fill="#ff9db8" opacity=".7"/>
+      <polygon points="93,106 107,106 100,115" fill="#ff7a9c"/>
+      <g stroke="#8a5a3c" stroke-width="2" stroke-linecap="round">
+        <line x1="30" y1="108" x2="58" y2="112"/><line x1="30" y1="122" x2="58" y2="120"/>
+        <line x1="170" y1="108" x2="142" y2="112"/><line x1="170" y1="122" x2="142" y2="120"/>
+      </g>
+    </symbol>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9fd3ee"/><stop offset="1" stop-color="#e9f6fb"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c9dba8"/><stop offset="1" stop-color="#8fae6a"/>
+    </linearGradient>
+  </defs>
+</svg>
+<svg id="bg" aria-hidden="true"><rect width="100%" height="100%" fill="url(#sky)"/><g id="scene"></g></svg>
+
+<div class="card" id="ask">
+  <div id="top"></div>
+  <h1 id="title">তুমি কি ৪ তারিখ সিয়ামের সাথে ঘুরতে যাবে? 🥺</h1>
+  <div class="row" id="opts">
+    <div class="col" id="yesCol">
+      <svg id="cat" viewBox="0 0 200 180" role="img" aria-label="কাঁদছে এমন বিড়াল">
+        <use href="#catHead" width="200" height="180"/>
+        <g id="sad">
+          <ellipse cx="72" cy="92" rx="12" ry="15" fill="#2b1d22"/>
+          <ellipse cx="128" cy="92" rx="12" ry="15" fill="#2b1d22"/>
+          <circle cx="77" cy="86" r="5" fill="#fff"/><circle cx="133" cy="86" r="5" fill="#fff"/>
+          <circle cx="68" cy="97" r="2.5" fill="#fff"/><circle cx="124" cy="97" r="2.5" fill="#fff"/>
+          <path d="M58 70 L84 78 M142 70 L116 78" stroke="#2b1d22" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M68 106 Q62 128 68 150 M132 106 Q138 128 132 150" stroke="#6ec6ff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".85"/>
+          <circle class="drop" cx="66" cy="152" r="5" fill="#6ec6ff"/>
+          <circle class="drop d2" cx="134" cy="152" r="5" fill="#6ec6ff"/>
+          <path d="M88 132 Q100 122 112 132" stroke="#8a5a3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <g id="happy" style="display:none">
+          <path d="M58 94 Q72 78 86 94 M114 94 Q128 78 142 94" stroke="#2b1d22" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M86 122 Q100 138 114 122" stroke="#8a5a3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <button id="yes">Yes</button>
+    </div>
+    <div id="noSlot"></div>
+  </div>
+</div>
+
+<div id="noWrap">
+  <button id="no">No</button>
+  <div class="rope"></div>
+  <svg class="puller" viewBox="0 0 200 180" aria-hidden="true">
+    <use href="#catHead" width="200" height="180"/>
+    <path d="M62 80 L84 92 L62 104 M138 80 L116 92 L138 104" stroke="#2b1d22" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M84 124 Q100 146 116 124 Z" fill="#ff7a9c" stroke="#8a5a3c" stroke-width="3" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<script>
+const PHONE='8801533546973';
+const NS='http://www.w3.org/2000/svg';
+const scene=document.getElementById('scene');
+function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function drawScene(){
+  const W=window.innerWidth,H=window.innerHeight;
+  scene.innerHTML='';
+  [[.15,.12,70],[.6,.08,90],[.85,.2,60]].forEach(c=>{
+    const g=el('g',{opacity:'.85'});
+    g.appendChild(el('ellipse',{cx:W*c[0],cy:H*c[1],rx:c[2],ry:c[2]*.35,fill:'#fff'}));
+    g.appendChild(el('ellipse',{cx:W*c[0]+c[2]*.5,cy:H*c[1]-8,rx:c[2]*.6,ry:c[2]*.3,fill:'#fff'}));
+    scene.appendChild(g);
+  });
+  scene.appendChild(el('rect',{x:0,y:H*.64,width:W,height:H*.4,fill:'url(#grass)'}));
+  let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const n=Math.min(220,Math.floor(W*H/6000));
+  const items=[];
+  for(let i=0;i<n;i++){items.push({x:rnd()*W,y:H*.62+rnd()*H*.4,r:(rnd()-.5)*18});}
+  items.sort((a,b)=>a.y-b.y);
+  items.forEach(p=>{
+    const t=(p.y-H*.62)/(H*.4);
+    const h=70+t*120,w=h/3;
+    scene.appendChild(el('use',{href:'#kash',x:p.x-w/2,y:p.y-h,width:w,height:h,transform:'rotate('+p.r+' '+p.x+' '+p.y+')'}));
+  });
+}
+drawScene();
+
+const yes=document.getElementById('yes'),no=document.getElementById('no');
+const wrap=document.getElementById('noWrap'),slot=document.getElementById('noSlot');
+const title=document.getElementById('title'),opts=document.getElementById('opts');
+const catEl=document.getElementById('cat'),top_=document.getElementById('top');
+let moved=false;
+function placeSlot(){
+  if(moved)return;
+  const r=slot.getBoundingClientRect();
+  wrap.style.left=r.left+'px';wrap.style.top=r.top+'px';
+}
+placeSlot();
+requestAnimationFrame(()=>{placeSlot();wrap.classList.add('ready');});
+window.addEventListener('resize',()=>{placeSlot();drawScene();});
+
+function dodge(){
+  const W=wrap.offsetWidth,H=wrap.offsetHeight,pad=8;
+  const cur=wrap.getBoundingClientRect();
+  let nx=cur.left,ny=cur.top;
+  for(let i=0;i<10;i++){
+    nx=pad+Math.random()*Math.max(1,window.innerWidth-W-2*pad);
+    ny=pad+Math.random()*Math.max(1,window.innerHeight-H-2*pad);
+    if(Math.hypot(nx-cur.left,ny-cur.top)>140)break;
+  }
+  wrap.classList.toggle('rev',nx<cur.left);
+  moved=true;
+  wrap.style.left=nx+'px';wrap.style.top=ny+'px';
+}
+['mouseenter','pointerdown','touchstart'].forEach(e=>
+  wrap.addEventListener(e,ev=>{ev.preventDefault();dodge();},{passive:false}));
+no.addEventListener('focus',dodge);
+no.addEventListener('click',e=>{e.preventDefault();dodge();});
+
+const steps=[
+  {q:'কোথায় যেতে চাও? 📍',o:['পার্ক 🌳','লেক 🌊','ক্যাফে ☕','সারপ্রাইজ 🎁'],k:'জায়গা'},
+  {q:'কয়টার দিকে যাবে? ⏰',o:['সকালে ☀️','দুপুরে 🌤️','বিকেলে 🌇','সন্ধ্যায় 🌙'],k:'সময়'},
+  {q:'কী খেতে চাও? 😋',o:['ফুচকা 🥟','আইসক্রিম 🍦','বিরিয়ানি 🍛','চা-কফি ☕'],k:'খাবার'}
+];
+const answers=[];
+function showStep(i){
+  if(i>=steps.length){return finish();}
+  title.textContent=steps[i].q;
+  opts.innerHTML='';
+  steps[i].o.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='opt';b.textContent=t;
+    b.addEventListener('click',()=>{answers.push(steps[i].k+': '+t);showStep(i+1);});
+    opts.appendChild(b);
+  });
+}
+function finish(){
+  title.textContent='ইয়ে! ৪ তারিখ দেখা হচ্ছে 🎉💖';
+  const msg='হাই! আমি Yes বলেছি 🐱 ৪ তারিখ ঘুরতে যাব। '+answers.join('। ')+'।';
+  opts.innerHTML='';
+  const p=document.createElement('p');
+  p.textContent='নিচের বাটনে চাপ দিয়ে মেসেজটা Send করে দাও, তাহলে আমি জানতে পারব 💌';
+  const a=document.createElement('a');
+  a.className='go';a.textContent='আমাকে জানাও 💌';
+  a.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg);
+  a.target='_blank';a.rel='noopener';
+  opts.appendChild(p);opts.appendChild(a);
+}
+yes.addEventListener('click',()=>{
+  document.getElementById('sad').style.display='none';
+  document.getElementById('happy').style.display='';
+  top_.appendChild(catEl);
+  wrap.remove();slot.remove();
+  showStep(0);
+});
+</script>
+</body>
+</html>
